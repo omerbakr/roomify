@@ -37,6 +37,15 @@ const Upload = ({ onComplete }: UploadProps) => {
     (file: File) => {
       if (!isSignedIn) return;
 
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+
       setFile(file);
       setProgress(0);
 
@@ -88,7 +97,7 @@ const Upload = ({ onComplete }: UploadProps) => {
     if (!isSignedIn) return;
 
     const droppedFile = e.dataTransfer.files[0];
-    const allowedTypes = ["image/jpeg", "image/png"];
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     if (droppedFile && allowedTypes.includes(droppedFile.type)) {
       processFile(droppedFile);
     }
@@ -129,7 +138,6 @@ const Upload = ({ onComplete }: UploadProps) => {
                 ? "Click to upload or just drag and drop"
                 : "Sign in or sign up with Puter to upload"}
             </p>
-            <p className="help">Maximum file size 50 MB.</p>
           </div>
         </div>
       ) : (
